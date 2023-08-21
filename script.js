@@ -75,6 +75,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function jump() {
         clearInterval(downTimerId)
+        if (isJumping){
+            clearInterval(upTimerId)
+        }
         isJumping = true
         upTimerId = setInterval(function() {       // Stops the interval when needed
             doodlerBottomSpace += 10
@@ -82,19 +85,20 @@ document.addEventListener('DOMContentLoaded', () => {
             if (doodlerBottomSpace > startPoint + 200){      // visualize the fall if the bottom space is over x.
                 fall()
             }
-        }, 30)
+        }, 20)
     }
 
     function fall(){
         clearInterval(upTimerId)    // stop the jump interval
-        clearInterval(leftTimerId)
-        clearInterval(rightTimerId)
+        if (!isJumping){
+            clearInterval(downTimerId)
+        }
         isGoingRight = false
         isGoingLeft = false
         isJumping = false
         downTimerId = setInterval( function() {
-            doodlerBottomSpace -= 5
-            doodler.style.bottom = doodlerBottomSpace +'px'
+                doodlerBottomSpace -= 5
+                doodler.style.bottom = doodlerBottomSpace +'px'
             if (doodlerBottomSpace <= 0 ){
                 gameOver()
             }
@@ -139,10 +143,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function moveLeft(){
+        if (isGoingLeft) {
+            clearInterval(leftTimerId)     // clear double clicked key interval
+        }
         isGoingLeft = true
         isGoingRight = false
         clearInterval(rightTimerId)
-        clearTimeout(rightTimerId)
         leftTimerId = setInterval( function() {
             if (doodlerLeftSpace >= 0){     // 0 as left grid
                 doodlerLeftSpace -= 5           // move doodler left
@@ -154,10 +160,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function moveRight(){
+        if (isGoingRight){
+            clearInterval(rightTimerId)}    // clears double-clicked key intervals
         isGoingRight = true
         isGoingLeft = false
         clearInterval(leftTimerId)
-        clearTimeout(leftTimerId)
         rightTimerId = setInterval( function() {
             if(doodlerLeftSpace <= 340){
                 doodlerLeftSpace += 5
@@ -171,9 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function moveStraight(){
         isGoingLeft, isGoingRight = false
         clearInterval(rightTimerId)
-        clearTimeout(rightTimerId)
         clearInterval(leftTimerId)
-        clearTimeout(leftTimerId)
     }
 
     function start() {

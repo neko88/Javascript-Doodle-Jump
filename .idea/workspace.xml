@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0265a8c6-7e1d-489c-ae06-5d531ee9cd78" name="Changes" comment="added key inputs for moving doodler left/right">
-      <change afterPath="$PROJECT_DIR$/.idea/runConfigurations.xml" afterDir="false" />
+    <list default="true" id="0265a8c6-7e1d-489c-ae06-5d531ee9cd78" name="Changes" comment="base game working with keys and gameover">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/script.js" beforeDir="false" afterPath="$PROJECT_DIR$/script.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/style.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,7 +57,7 @@
       <updated>1692639095819</updated>
       <workItem from="1692639097191" duration="3617000" />
       <workItem from="1692645362531" duration="873000" />
-      <workItem from="1692647350757" duration="4289000" />
+      <workItem from="1692647350757" duration="5989000" />
     </task>
     <task id="LOCAL-00001" summary="Doodle Jump work in progress upload">
       <created>1692641586391</created>
@@ -75,7 +73,14 @@
       <option name="project" value="LOCAL" />
       <updated>1692650036422</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="base game working with keys and gameover">
+      <created>1692651816475</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1692651816475</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -96,6 +101,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Doodle Jump work in progress upload" />
     <MESSAGE value="added key inputs for moving doodler left/right" />
-    <option name="LAST_COMMIT_MESSAGE" value="added key inputs for moving doodler left/right" />
+    <MESSAGE value="base game working with keys and gameover" />
+    <option name="LAST_COMMIT_MESSAGE" value="base game working with keys and gameover" />
   </component>
 </project>
