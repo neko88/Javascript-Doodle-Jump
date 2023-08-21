@@ -9,9 +9,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let isGameOver = false
     let platformCount = 5
     let platforms = []
-    let upTimerId, downTimerId, leftTimeId, rightTimerId
+    let upTimerId, downTimerId, leftTimerId, rightTimerId
     let isJumping = false
     let isGoingLeft, isGoingRight = false
+    let score = 0
 
 
 
@@ -55,11 +56,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /* As the doodler moves up, the current platforms need to move down. */
     function movePlatforms(){
-        if (doodlerBottomSpace > 200){  // if the doodler is above the bot margin, move
+        if (doodlerBottomSpace > 200){  // if the doodler is above the bottom margin, move
             platforms.forEach( platform => {
                 platform.bottom -= 4
                 let visual = platform.visual
                 visual.style.bottom = platform.bottom + 'px'    // platform moves by 4 each time
+                if (platform.bottom < 10){
+                    let firstPlatform = platforms[0].visual     // get first platform visual
+                    firstPlatform.classList.remove('platform')
+                    platforms.shift()       // js shifts array
+                    score++
+                    let newPlatform = new Platform(600)     // the new platform appears at the top of the grid
+                    platforms.push(newPlatform)
+                }
             })
         }
     }
@@ -68,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
         clearInterval(downTimerId)
         isJumping = true
         upTimerId = setInterval(function() {       // Stops the interval when needed
-            doodlerBottomSpace += 20
+            doodlerBottomSpace += 10
             doodler.style.bottom = doodlerBottomSpace + 'px'        // visual
             if (doodlerBottomSpace > startPoint + 200){      // visualize the fall if the bottom space is over x.
                 fall()
@@ -78,6 +87,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function fall(){
         clearInterval(upTimerId)    // stop the jump interval
+        clearInterval(leftTimerId)
+        clearInterval(rightTimerId)
+        isGoingRight = false
+        isGoingLeft = false
         isJumping = false
         downTimerId = setInterval( function() {
             doodlerBottomSpace -= 5
@@ -94,7 +107,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     (doodlerLeftSpace <= platform.left +85) &&
                     !isJumping
                 ){
-                    console.log('landed')
                     startPoint = doodlerBottomSpace     // update doodler's current bottom space to be its new startpoint
                     jump()
                 }
@@ -105,8 +117,14 @@ document.addEventListener('DOMContentLoaded', () => {
     function gameOver(){
         console.log('game over')
         isGameOver = true
+        while(grid.firstChild) {
+            grid.removeChild(grid.firstChild)
+        }
+        grid.innerHTML = score
         clearInterval(upTimerId)
         clearInterval(downTimerId)
+        clearInterval(leftTimerId)
+        clearInterval(rightTimerId)
     }
 
     function control(e){
@@ -115,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (e.key === "ArrowRight"){
             moveRight()
         } else if (e.key === "ArrowUp"){
-            // moveStraight
+            moveStraight()
         }
 
     }
@@ -124,32 +142,38 @@ document.addEventListener('DOMContentLoaded', () => {
         isGoingLeft = true
         isGoingRight = false
         clearInterval(rightTimerId)
-        leftTimeId = setInterval( function() {
+        clearTimeout(rightTimerId)
+        leftTimerId = setInterval( function() {
             if (doodlerLeftSpace >= 0){     // 0 as left grid
                 doodlerLeftSpace -= 5           // move doodler left
                 doodler.style.left = doodlerLeftSpace + 'px'
             } else {
-                moveRight()
+                moveRight()     // move right from bouncing off grid
             }
-        }, 30)
+        }, 20)
     }
 
     function moveRight(){
         isGoingRight = true
         isGoingLeft = false
-        clearInterval(leftTimeId)
+        clearInterval(leftTimerId)
+        clearTimeout(leftTimerId)
         rightTimerId = setInterval( function() {
             if(doodlerLeftSpace <= 340){
                 doodlerLeftSpace += 5
                 doodler.style.left = doodlerLeftSpace + 'px'
             } else {
-                moveLeft()
+                moveLeft()      // move left from bouncing off grid
             }
-        })
+        },20)
     }
 
     function moveStraight(){
-
+        isGoingLeft, isGoingRight = false
+        clearInterval(rightTimerId)
+        clearTimeout(rightTimerId)
+        clearInterval(leftTimerId)
+        clearTimeout(leftTimerId)
     }
 
     function start() {
@@ -163,6 +187,5 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     // TODO: attach to a button
     start()
-
 
 })
