@@ -4,10 +4,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const grid = document.querySelector ('.grid')          // Picks out element from HTML.
     const doodler = document.createElement('div')
     let doodlerLeftSpace = 50
-    let doodlerBottomSpace = 150
+    let doodlerBottomSpace = 250
     let isGameOver = false
     let platformCount = 5
     let platforms = []
+    let upTimerId
+    let downTimerId
 
     function createDoodler() {
         grid.appendChild(doodler)          // put the doodler (child) into the grid (parent).
@@ -58,11 +60,41 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function jump() {
+        clearInterval(downTimerId)
+        upTimerId = setInterval(function() {       // Stops the interval when needed
+            doodlerBottomSpace += 20
+            doodler.style.bottom = doodlerBottomSpace + 'px'        // visual
+            if (doodlerBottomSpace > 350){      // visualize the fall if the bottom space is over x.
+                fall()
+            }
+        }, 20)
+    }
+
+    function fall(){
+        clearInterval(upTimerId)    // stop the jump interval
+        downTimerId = setInterval( function() {
+            doodlerBottomSpace -= 5
+            doodler.style.bottom = doodlerBottomSpace +'px'
+            if (doodlerBottomSpace <= 0 ){
+                jump()
+            }
+        }, 30)
+    }
+
+    function gameOver(){
+        console.log('game over')
+        isGameOver = true
+        clearInterval(upTimerId)
+        clearInterval(downTimerId)
+    }
+
     function start() {
         if (!isGameOver) {
             createDoodler()
             createPlatforms()
-            console.log("hi")
+            setInterval(movePlatforms, 30)      // sets interval for moving platforms
+            jump()
         }
     }
     // TODO: attach to a button
