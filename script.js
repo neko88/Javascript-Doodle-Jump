@@ -4,18 +4,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const grid = document.querySelector ('.grid')          // Picks out element from HTML.
     const doodler = document.createElement('div')
     let doodlerLeftSpace = 50
-    let doodlerBottomSpace = 250
+    let startPoint = 150
+    let doodlerBottomSpace = 150
     let isGameOver = false
     let platformCount = 5
     let platforms = []
-    let upTimerId
-    let downTimerId
+    let upTimerId, downTimerId, leftTimeId, rightTimerId
+    let isJumping = false
+    let isGoingLeft, isGoingRight = false
+
+
 
     function createDoodler() {
         grid.appendChild(doodler)          // put the doodler (child) into the grid (parent).
         doodler.classList.add('doodler')    // adding the doodler class to the element of doodler - appears corresp to .css.
-
-        doodler.style.left = doodlerLeftSpace + 'px' // left spacing of 50px
+        //doodlerLeftSpace = platforms[0].left
+        doodler.style.left = doodlerLeftSpace + 'px' // left spacing of 50px for absolute positioning
         doodler.style.bottom = doodlerBottomSpace + 'px'
     }
 
@@ -62,23 +66,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function jump() {
         clearInterval(downTimerId)
+        isJumping = true
         upTimerId = setInterval(function() {       // Stops the interval when needed
             doodlerBottomSpace += 20
             doodler.style.bottom = doodlerBottomSpace + 'px'        // visual
-            if (doodlerBottomSpace > 350){      // visualize the fall if the bottom space is over x.
+            if (doodlerBottomSpace > startPoint + 200){      // visualize the fall if the bottom space is over x.
                 fall()
             }
-        }, 20)
+        }, 30)
     }
 
     function fall(){
         clearInterval(upTimerId)    // stop the jump interval
+        isJumping = false
         downTimerId = setInterval( function() {
             doodlerBottomSpace -= 5
             doodler.style.bottom = doodlerBottomSpace +'px'
             if (doodlerBottomSpace <= 0 ){
-                jump()
+                gameOver()
             }
+            /*Check if doodler is on a platform*/
+            platforms.forEach(platform => {
+                if (
+                    (doodlerBottomSpace >= platform.bottom) &&
+                    (doodlerBottomSpace <= platform.bottom + 15) && // Height of doodler is 15px
+                    ((doodlerLeftSpace + 60 ) >= platform.left) &&
+                    (doodlerLeftSpace <= platform.left +85) &&
+                    !isJumping
+                ){
+                    console.log('landed')
+                    startPoint = doodlerBottomSpace     // update doodler's current bottom space to be its new startpoint
+                    jump()
+                }
+            })
         }, 30)
     }
 
@@ -89,12 +109,56 @@ document.addEventListener('DOMContentLoaded', () => {
         clearInterval(downTimerId)
     }
 
+    function control(e){
+        if (e.key === "ArrowLeft") {
+            moveLeft()
+        } else if (e.key === "ArrowRight"){
+            moveRight()
+        } else if (e.key === "ArrowUp"){
+            // moveStraight
+        }
+
+    }
+
+    function moveLeft(){
+        isGoingLeft = true
+        isGoingRight = false
+        clearInterval(rightTimerId)
+        leftTimeId = setInterval( function() {
+            if (doodlerLeftSpace >= 0){     // 0 as left grid
+                doodlerLeftSpace -= 5           // move doodler left
+                doodler.style.left = doodlerLeftSpace + 'px'
+            } else {
+                moveRight()
+            }
+        }, 30)
+    }
+
+    function moveRight(){
+        isGoingRight = true
+        isGoingLeft = false
+        clearInterval(leftTimeId)
+        rightTimerId = setInterval( function() {
+            if(doodlerLeftSpace <= 340){
+                doodlerLeftSpace += 5
+                doodler.style.left = doodlerLeftSpace + 'px'
+            } else {
+                moveLeft()
+            }
+        })
+    }
+
+    function moveStraight(){
+
+    }
+
     function start() {
         if (!isGameOver) {
             createDoodler()
             createPlatforms()
             setInterval(movePlatforms, 30)      // sets interval for moving platforms
             jump()
+            document.addEventListener('keyup', control)     // if keyboard, execute control
         }
     }
     // TODO: attach to a button
