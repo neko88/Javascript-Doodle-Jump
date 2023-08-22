@@ -3,6 +3,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const grid = document.querySelector ('.grid')          // Picks out element from HTML.
     const doodler = document.createElement('div')
+    const reset = document.createElement('div')
     let doodlerLeftSpace = 50
     let startPoint = 150
     let doodlerBottomSpace = 150
@@ -19,7 +20,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function createDoodler() {
         grid.appendChild(doodler)          // put the doodler (child) into the grid (parent).
         doodler.classList.add('doodler')    // adding the doodler class to the element of doodler - appears corresp to .css.
-        //doodlerLeftSpace = platforms[0].left
         doodler.style.left = doodlerLeftSpace + 'px' // left spacing of 50px for absolute positioning
         doodler.style.bottom = doodlerBottomSpace + 'px'
     }
@@ -129,6 +129,10 @@ document.addEventListener('DOMContentLoaded', () => {
         clearInterval(downTimerId)
         clearInterval(leftTimerId)
         clearInterval(rightTimerId)
+        reset.classList.add('reset')
+        reset.innerHTML = 'RESET'
+        grid.appendChild(reset)         // make the button appear on the grid
+        reset.addEventListener(("click"),resetGame);
     }
 
     function control(e){
@@ -192,5 +196,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     // TODO: attach to a button
     start()
+
+    function resetGame(){
+         doodlerLeftSpace = 50
+         startPoint = 150
+         doodlerBottomSpace = 150
+         platformCount = 5
+         platforms = []
+         isGoingLeft, isGoingRight = false
+         score = 0
+        isJumping = false
+        isGameOver = false
+        grid.innerHTML = ""
+        createDoodler()
+        createPlatforms()
+        jump()
+    }
 
 })

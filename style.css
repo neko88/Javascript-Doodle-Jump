@@ -20,3 +20,22 @@
     background-color: green;
     position: absolute;
 }
+
+/* Reset Button */
+.reset{
+    height: 80px;
+    width: 200px;
+    font-size: 50px;
+    text-align: center;
+    cursor: pointer;
+    border: 1px solid red;
+    border-radius: 10%;
+    padding: 10px 15px;
+    background-color: #f44336;
+    box-shadow: 0 0 3px;
+    color: #fff;
+    transition: all 0.2s ease;
+}
+.reset:hover{
+    color: #000;
+}
